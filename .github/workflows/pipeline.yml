@@ -31,16 +31,16 @@ jobs:
       #     build: npm run build
       #     start: npm run start-prod
       #     wait-on: http://localhost:5000
-      # - name: deploy to heroku
-      #   if: ${{ github.event_name == 'push' }}
-      #   uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-      #   with:
-      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}} #Secret key for heroku api
-      #     heroku_app_name: "myphonebookapp90" #Must be unique in Heroku
-      #     heroku_email: "sudesh7443@gmail.com"
-      #     healthcheck: "https://myphonebookapp90.herokuapp.com/"
-      #     checkstring: "ok"
-      #     rollbackonhealthcheckfailed: true
+      - name: deploy to heroku
+        if: ${{ github.event_name == 'push' }}
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}} #Secret key for heroku api
+          heroku_app_name: "myphonebookapp90" #Must be unique in Heroku
+          heroku_email: "sudesh7443@gmail.com"
+          healthcheck: "https://myphonebookapp90.herokuapp.com/"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true
 
       #check for test and give message on discord
 
