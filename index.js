@@ -47,6 +47,10 @@ App.use(morgan(":url :method :body:"));
 //   },
 // ];
 
+App.get("/health", (request, response) => {
+  response.send("ok");
+});
+
 App.get("/", (request, response) => {
   response.send("<h1>Hello world!!</h1>  ");
 });
