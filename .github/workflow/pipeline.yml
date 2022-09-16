@@ -1,0 +1,112 @@
+name: Project pipeline workflow!
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: npm install
+        run: npm install
+      - name: lint
+        run: npm run lint
+
+      - name: build
+        run: npm run build
+
+      # - name: test
+      #   run: npm run test
+      # - name: e2e tests
+      #   uses: cypress-io/github-action@v4
+      #   with:
+      #     build: npm run build
+      #     start: npm run start-prod
+      #     wait-on: http://localhost:5000
+      # - name: deploy to heroku
+      #   if: ${{ github.event_name == 'push' }}
+      #   uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      #   with:
+      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}} #Secret key for heroku api
+      #     heroku_app_name: "myphonebookapp90" #Must be unique in Heroku
+      #     heroku_email: "sudesh7443@gmail.com"
+      #     healthcheck: "https://myphonebookapp90.herokuapp.com/"
+      #     checkstring: "ok"
+      #     rollbackonhealthcheckfailed: true
+
+      #check for test and give message on discord
+
+      # - name: Test Failure
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   if: failure()
+      #   with:
+      #     severity: error
+      #     details: Test Failed!
+      #     avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      # - name: Test Cancelled
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   if: cancelled()
+      #   with:
+      #     severity: warn
+      #     details: Test Cancelled!
+      #     avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  # tag-releases:
+  #   permissions: write-all
+  #   needs: [simple_deployment_pipeline]
+  #   runs-on: ubuntu-latest
+
+  #   env:
+  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     WITH_V: true
+  #     INITIAL_VERSION: 0.0.0
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: "0"
+  #     # bump tags and releases
+  #     - name: Bump version and push tag major release
+  #       if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#major') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+
+  #       uses: anothrNick/github-tag-action@1.40.0
+  #       id: major
+  #       env:
+  #         DEFAULT_BUMP: major
+  #         JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+
+  #     - name: Bump version and push tag minor release
+  #       if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#minor') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+  #       uses: anothrNick/github-tag-action@1.40.0
+  #       id: minor
+  #       env:
+  #         DEFAULT_BUMP: minor
+  #         JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+
+  #     - name: Bump version and push tag patch release
+  #       if: ${{ steps.major.conclusion != 'success' && steps.minor.conclusion != 'success' && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+  #       uses: anothrNick/github-tag-action@1.40.0
+  #       env:
+  #         DEFAULT_BUMP: patch
+  #         JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+
+  # - name: Test Success
+  #   if: success()
+  #   uses: rjstone/discord-webhook-notify@v1
+  #   with:
+  #     severity: info
+  #     details: Test Succeeded!
+  #     avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+  #     description: to https://fullstack-pokedex321123.herokuapp.com/ by su-de-sh
+  #     text: New version of Pokedox deployed!!!!
+  #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
