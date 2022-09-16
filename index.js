@@ -17,8 +17,6 @@ morgan(function (tokens, req, res) {
     tokens["response-time"](req, res),
     "ms",
   ].join(" ");
-
-  console.log(log);
 });
 
 morgan.token("body", (req) => JSON.stringify(req.body));
