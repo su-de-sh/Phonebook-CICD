@@ -61,44 +61,44 @@ jobs:
       #     avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
       #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-  # tag-releases:
-  #   permissions: write-all
-  #   needs: [simple_deployment_pipeline]
-  #   runs-on: ubuntu-latest
+  tag-releases:
+    permissions: write-all
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
 
-  #   env:
-  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     WITH_V: true
-  #     INITIAL_VERSION: 0.0.0
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      WITH_V: true
+      INITIAL_VERSION: 0.0.0
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: "0"
-  #     # bump tags and releases
-  #     - name: Bump version and push tag major release
-  #       if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#major') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: "0"
+      # bump tags and releases
+      - name: Bump version and push tag major release
+        if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#major') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
 
-  #       uses: anothrNick/github-tag-action@1.40.0
-  #       id: major
-  #       env:
-  #         DEFAULT_BUMP: major
-  #         JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+        uses: anothrNick/github-tag-action@1.40.0
+        id: major
+        env:
+          DEFAULT_BUMP: major
+          JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
 
-  #     - name: Bump version and push tag minor release
-  #       if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#minor') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
-  #       uses: anothrNick/github-tag-action@1.40.0
-  #       id: minor
-  #       env:
-  #         DEFAULT_BUMP: minor
-  #         JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+      - name: Bump version and push tag minor release
+        if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#minor') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+        uses: anothrNick/github-tag-action@1.40.0
+        id: minor
+        env:
+          DEFAULT_BUMP: minor
+          JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
 
-  #     - name: Bump version and push tag patch release
-  #       if: ${{ steps.major.conclusion != 'success' && steps.minor.conclusion != 'success' && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
-  #       uses: anothrNick/github-tag-action@1.40.0
-  #       env:
-  #         DEFAULT_BUMP: patch
-  #         JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+      - name: Bump version and push tag patch release
+        if: ${{ steps.major.conclusion != 'success' && steps.minor.conclusion != 'success' && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+        uses: anothrNick/github-tag-action@1.40.0
+        env:
+          DEFAULT_BUMP: patch
+          JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
 
   # - name: Test Success
   #   if: success()
